@@ -17,11 +17,14 @@ class GatherResult:
     @classmethod
     def from_mapping(cls, payload: Mapping[str, Any]) -> "GatherResult":
         confidence = payload.get("confidence")
+        confidence_value: Optional[float] = None
+        if confidence is not None and confidence != "":
+            confidence_value = float(str(confidence))
         return cls(
             call_id=str(payload.get("call_id", "")),
             digits=str(payload["digits"]) if "digits" in payload else None,
             speech_result=str(payload["speech_result"]) if "speech_result" in payload else None,
-            confidence=float(confidence) if confidence not in (None, "") else None,
+            confidence=confidence_value,
             voice=str(payload["voice"]) if "voice" in payload else None,
             from_=str(payload["event_from"]) if "event_from" in payload else None,
             to=str(payload["event_to"]) if "event_to" in payload else None,
